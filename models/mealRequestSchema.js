@@ -8,19 +8,41 @@ const mealRequestSchema = new mongoose.Schema({
     },
     grain: [{
         type: String,
+        
     }],
+    grainAmount: {
+        type: Number,
+        default: 0
+    },
     fruits: [{
         type: String,
+        
     }],
+    fruitsAmount: { 
+        type: Number,
+        default: 0
+    },
     vegetables: [{
         type: String,
     }],
+    vegetablesAmount: { 
+        type: Number,
+        default: 0
+    },
     protein: [{
         type: String,
     }],
+    proteinAmount: { 
+        type: Number,
+        default: 0
+    },
     dairy: [{
         type: String,
     }],
+    dairyAmount: { 
+        type: Number,
+        default: 0
+    },
     
 })
 

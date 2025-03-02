@@ -46,18 +46,10 @@ function Navbar(){
             alt=''
             className="rounded-full"
             />
-            <p className=" font-inter font-semibold text-2xl text-zinc-100 tracking-wide">MealShare</p>
+            <p className=" font-inter font-semibold text-2xl text-black tracking-wide">NourishEd</p>
             </Link>
 
             <div className='flex gap-3 max-md:hidden'>
-
-                <Link href={'/notes'} className="flex gap-2 flex-center">
-                <p className="max-sm:hidden font-satoshi font-normal text-sm text-zinc-300 tracking-wide transition-all hover:text-gray-500">Notes</p>
-                </Link>
-
-                <Link href={'/leaderboard'} className="flex gap-2 flex-center">
-                <p className="max-sm:hidden font-satoshi font-normal text-sm text-zinc-300 tracking-wide transition-all hover:text-gray-500">Leaderboard</p>
-                </Link>
 
             </div>
             </div>

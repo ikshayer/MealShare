@@ -1,5 +1,5 @@
 'use client'
-
+import { Progress } from "@/components/ui/progress"
 import {User, Mail, UserPen, ThumbsDown, LoaderCircle} from "lucide-react"
 
 import { signOut } from "next-auth/react"
@@ -27,6 +27,7 @@ import {
   
 import { useState, useRef, useEffect } from "react"
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api'
+import SessionCard from "./SessionCard"
 
 function ProfileCard({
     profile,
@@ -49,6 +50,8 @@ function ProfileCard({
     }
     const emailArray = useRef([])
 
+    
+
     const handleMapClick = (event) => {
         setSelectedLocation({
             lat: event.latLng.lat(),
@@ -64,16 +67,19 @@ function ProfileCard({
               lat: place.geometry.location.lat(),
               lng: place.geometry.location.lng(),
             })
+        console.log('Place: ', place.geometry.location.lat(), place.geometry.location.lng())
           }
         } else {
           console.log('Autocomplete is not loaded yet!')
         }
       }
 
+    const libraries = ['places']
+
     const handleDescSubmit = () => {
         const username = document.getElementById('profile_name').value
         const numOfStudents = document.getElementById('profile_students').value
-        const location = selectedLocation
+        const location = selectedLocation ? [selectedLocation.lat, selectedLocation.lng] : null
 
         const updateProfile = async () => {
 
@@ -83,17 +89,21 @@ function ProfileCard({
                 const response = await fetch(`/api/users/${session.user.id}`, {
                     method: 'PATCH',
                     body: JSON.stringify({
-                        description: description
+                        username: username,
+                        numOfStudents: numOfStudents,
+                        location: location
                     })
 
                 })
 
                 if(response.ok){
-                    setProfile({...profile, biography: description})
+                    username ? setProfile({...profile, username: username}) : null
+                    numOfStudents ? setProfile({...profile, numOfStudents: numOfStudents}) : null   
+                    location ? setProfile({...profile, location: location}) : null
                     toast({
                         variant: 'success',
                         title: "Profile Updated",
-                        description: "We have successfully updated the description!",
+                        description: "We have successfully updated the profile!",
                     })
                 }
             }
@@ -107,7 +117,9 @@ function ProfileCard({
             }
             finally{
                 setSubmitting(false)
-                document.getElementById('profile_description').value = ''
+                document.getElementById('profile_name').value = ''
+                document.getElementById('profile_students').value = ''
+                setSelectedLocation(null)
             }
         }
 
@@ -243,6 +255,122 @@ function ProfileCard({
         decreaseEndorsement()
     }
 
+    const night = [
+        { elementType: "geometry", stylers: [{ color: "#1d2c4d" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#8ec3b9" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#1a3646" }] },
+        {
+          featureType: "administrative.country",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#4b6878" }],
+        },
+        {
+          featureType: "administrative.land_parcel",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#64779e" }],
+        },
+        {
+          featureType: "administrative.province",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#4b6878" }],
+        },
+        {
+          featureType: "landscape.man_made",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#334e87" }],
+        },
+        {
+          featureType: "landscape.natural",
+          elementType: "geometry",
+          stylers: [{ color: "#023e58" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "geometry",
+          stylers: [{ color: "#283d6a" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#6f9ba5" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#1d2c4d" }],
+        },
+        {
+          featureType: "road",
+          elementType: "geometry",
+          stylers: [{ color: "#304a7d" }],
+        },
+        {
+          featureType: "road",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#98a5be" }],
+        },
+        {
+          featureType: "road",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#1d2c4d" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry",
+          stylers: [{ color: "#2c6675" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#255763" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#b0d5ce" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#023e58" }],
+        },
+        {
+          featureType: "transit",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#98a5be" }],
+        },
+        {
+          featureType: "transit",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#1d2c4d" }],
+        },
+        {
+          featureType: "transit.line",
+          elementType: "geometry.fill",
+          stylers: [{ color: "#283d6a" }],
+        },
+        {
+          featureType: "transit.station",
+          elementType: "geometry",
+          stylers: [{ color: "#3a4762" }],
+        },
+        {
+          featureType: "water",
+          elementType: "geometry",
+          stylers: [{ color: "#0e1626" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#4e6d70" }],
+        },
+      ];
+
+      const containerStyle = {
+        width: '100%',
+        height: '100%'
+      };
+
     const LoadingMessage = () => (
         <div className="flex justify-center items-center h-full">
             <LoaderCircle className="animate-spin w-24 h-24"/>
@@ -255,13 +383,13 @@ function ProfileCard({
 
     return (
         <section className="mb-3 w-full">
-        <div className="max-[1108px]:block flex-start gap-3 w-full">
+        <div className="max-[1108px]:block  flex-start gap-3 w-full">
         {lengthBool ? (
             <>
-        <div className=" min-h-[355px] bg-[#141414cc] border border-zinc-500 px-16 py-8 rounded-xl max-[865px]:block flex-center max-[1108px]:mb-3 max-[1108px]:w-full gap-8 w-full">
+        <div className=" min-h-[355px] border border-zinc-500 bg-zinc-100/[0.5] px-16 py-8 rounded-xl max-[865px]:block flex-center max-[1108px]:mb-3 max-[1108px]:w-full gap-8 w-full">
             <div className="w-full my-12 flex-center">
                 <h1
-                className={'text-6xl font-bold font-arial text-zinc-100 pb-3'}
+                className={'text-6xl font-bold font-arial black_gradient pb-3'}
                 >
                     {profile.username}
                 </h1>
@@ -273,11 +401,11 @@ function ProfileCard({
         <div className="max-[550px]:block max-[1108px]:flex gap-3 profileSm:max-[1108px]:w-2/3 max-[865px]:w-full"
         >
         
-        <div className="min-w-[235px] border border-zinc-500 relative bg-[#141414cc] h-52 rounded-xl flex-center max-[1108px]:w-1/2 max-[550px]:w-full cursor-pointer"
+        <div className="min-w-[235px] border border-zinc-500 relative bg-zinc-100/[0.5] h-52 rounded-xl flex-center max-[1108px]:w-1/2 max-[550px]:w-full cursor-pointer"
         onClick={() => handleCopy()}
         >
             {!copied ? (
-            <Mail className="w-32 h-32 text-zinc-100 hover:w-36 hover:h-36 transition-all"/>
+            <Mail className="w-32 h-32 text-zinc-700 hover:w-36 hover:h-36 transition-all"/>
             ) : (
             <>
             <div className="w-full">
@@ -325,11 +453,11 @@ function ProfileCard({
                 />
                 <label className="font-satoshi font-bold text-sm text-black tracking-wide mt-2 pr-8">Location</label>
             
-                <div className="h-64 w-full mb-2">
-                    <LoadScript libraries={['places']} loadingElement={<LoadingMessage />} googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}>
+                <div className="h-56 w-full mb-2">
+                    <LoadScript libraries={libraries} loadingElement={<LoadingMessage />} googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}>
                     <Autocomplete
                     onLoad={(autocomplete) => setAutocomplete(autocomplete)}
-                    onPlaceChanged={() => handlePlaceChanged()}
+                    onPlaceChanged={handlePlaceChanged}
                 >
                     <input type="text"
                         id="profile_location"
@@ -337,16 +465,18 @@ function ProfileCard({
                         className="text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 outline-none focus:border-gray-900 w-full h-10 mb-2"
                     />
                 </Autocomplete>
-                        <GoogleMap
-                            mapContainerStyle={{ width: '100%', height: '100%' }}
-                            center={{ lat: 38.8462, lng: -77.3064 }}
-                            zoom={12}
-                            onClick={(e) => handleMapClick(e)}
-                        >
-                            {selectedLocation && (
-                                <Marker position={selectedLocation} />
-                            )}
-                        </GoogleMap>
+                <div className="h-44 w-full mb-2 border border-gray-300">
+                    <GoogleMap
+                        mapContainerStyle={{ width: '100%', height: '100%' }}
+                        center={{ lat: 38.8462, lng: -77.3064 }}
+                        zoom={12}
+                        onClick={(e) => handleMapClick(e)}
+                    >
+                        {selectedLocation && (
+                            <Marker position={selectedLocation} />
+                        )}
+                    </GoogleMap>
+                    </div>
                     </LoadScript>
                     </div>
                 <label className="font-satoshi font-bold text-sm text-black tracking-wide mt-6 pr-8">Number of Students</label>
@@ -451,11 +581,145 @@ function ProfileCard({
         </div>
         <div className="w-full flex gap-3 mt-3">
             <div className="w-1/2 bg-[#141414cc] h-52 rounded-xl py-4 flex-center border border-zinc-500">
-                <h1 className="font-bold rounded-xl text-zinc-100 text-4xl">Number of Students: {}</h1>
+                <h1 className="font-bold rounded-xl text-zinc-100 text-4xl">Number of Students: {profile.numOfStudents}</h1>
             </div>
-            <div className="w-1/2 bg-[#141414cc] h-52 rounded-xl py-4 flex-center border border-zinc-500">
-                <h1 className="font-bold rounded-xl text-zinc-100 text-4xl">Location: {}</h1>
+            <div className="w-1/2 bg-[#141414cc] h-52 rounded-xl flex-center border border-zinc-500">
+            {profile.location.length !== 0 ? (
+            <LoadScript 
+            className='rounded-xl'
+        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY} 
+        loadingElement={<LoadingMessage />}
+        
+        >
+            <GoogleMap className="custom-map-container rounded-xl"
+                mapContainerStyle={containerStyle}
+                center={{
+                    lat: profile.location[0],
+                    lng: profile.location[1]
+                }}
+                zoom={12}
+                options={{
+                    styles: night,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    fullscreenControl: false,
+                }}
+            
+            >
+                
+                <Marker position={{
+                    lat: profile.location[0],
+                    lng: profile.location[1]
+                }} />
+                
+            </GoogleMap>
+        </LoadScript>
+        ) : null}
             </div>
+        </div>
+        <div className="flex gap-3 w-full">
+        
+        {parseInt(profile.requestsList.grain) > 0 && (<div
+        className="w-1/3 mt-3 rounded-md px-4 py-2 border border-zinc-500 bg-zinc-100/[0.5] "
+        
+        >
+           <div className='flex-between text-black'>
+                <h1 className='font-bold'>
+                    Grains
+                </h1>
+                <button className='black_btn' onClick={() => handleDonate()}>
+                    Donate
+                </button>
+           </div>
+
+           <Progress value={parseInt(profile.requestsList.grainAmount)/parseInt(profile.requestsList.grain)} className='mt-3' />
+            <p className="flex-end text-sm font-satoshi font-semibold mt-1">{profile.requestsList.grainAmount}/{profile.requestsList.grain} lbs</p>
+            
+        </div>)}
+        
+        {parseInt(profile.requestsList.fruits) > 0 && (
+        <div
+        className="w-1/3 mt-3 rounded-md px-4 py-2 border border-zinc-500 bg-zinc-100/[0.5] "
+        
+        >
+           <div className='flex-between text-black'>
+                <h1 className='font-bold'>
+                    Fruits
+                </h1>
+                <button className='black_btn' onClick={() => handleDonate()}>
+                    Donate
+                </button>
+           </div>
+
+           <Progress value={parseInt(profile.requestsList.fruitsAmount)/parseInt(profile.requestsList.fruits)} className='mt-3' />
+            <p className="flex-end text-sm font-satoshi font-semibold mt-1">{profile.requestsList.fruitsAmount}/{profile.requestsList.fruits} lbs</p>
+            
+        </div>)}
+
+
+        {parseInt(profile.requestsList.vegetables) > 0 && (
+        <div
+        className="w-1/3 mt-3 rounded-md px-4 py-2 border border-zinc-500 bg-zinc-100/[0.5] "
+        
+        >
+           <div className='flex-between text-black'>
+                <h1 className='font-bold'>
+                    Vegetable
+                </h1>
+                <button className='black_btn' onClick={() => handleDonate()}>
+                    Donate
+                </button>
+           </div>
+
+           <Progress value={parseInt(profile.requestsList.vegetablesAmount)/parseInt(profile.requestsList.vegetables)} className='mt-3' />
+            <p className="flex-end text-sm font-satoshi font-semibold mt-1">{profile.requestsList.vegetablesAmount}/{profile.requestsList.vegetables} lbs</p>
+            
+        </div>)}
+
+        
+
+        </div>
+        <div className="flex w-full gap-3 ">
+
+        {parseInt(profile.requestsList.protein) > 0 && (
+        <div
+        className="w-1/3 gap-3 mt-3 rounded-md px-4 py-2 border border-zinc-500 bg-zinc-100/[0.5] "
+        
+        >
+           <div className='flex-between text-black'>
+                <h1 className='font-bold'>
+                    Proteins
+                </h1>
+                <button className='black_btn' onClick={() => handleDonate()}>
+                    Donate
+                </button>
+           </div>
+
+           <Progress value={parseInt(profile.requestsList.proteinAmount)/parseInt(profile.requestsList.protein)} className='mt-3' />
+            <p className="flex-end text-sm font-satoshi font-semibold mt-1">{profile.requestsList.proteinAmount}/{profile.requestsList.protein} lbs</p>
+            
+        </div>)}
+
+
+        {parseInt(profile.requestsList.dairy) > 0 && (
+        <div
+        className="w-1/3 mt-3 rounded-md px-4 py-2 border border-zinc-500 bg-zinc-100/[0.5] "
+        
+        >
+           <div className='flex-between text-black'>
+                <h1 className='font-bold'>
+                    Dairy
+                </h1>
+                <button className='black_btn' onClick={() => handleDonate()}>
+                    Donate
+                </button>
+           </div>
+
+           <Progress value={parseInt(profile.requestsList.dairyAmount)/parseInt(profile.requestsList.dairy)} className='mt-3' />
+            <p className="flex-end text-sm font-satoshi font-semibold mt-1">{profile.requestsList.dairyAmount}/{profile.requestsList.dairy} lbs</p>
+            
+        </div>)}
+
         </div>
         </section>
     )

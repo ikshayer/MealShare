@@ -11,7 +11,7 @@ const profileSchema = new mongoose.Schema({
         required: [true, "Username is required"],
     },
     numOfStudents: {
-        type: Number,
+        type: String,
         default: 0
     },
     location: [{

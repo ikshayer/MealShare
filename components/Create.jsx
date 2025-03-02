@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import {useState} from 'react'
 
 import { useToast } from "@hooks/use-toast"
+import { Checkbox } from "@/components/ui/checkbox"
 
 
 function Create(
@@ -22,7 +23,7 @@ function Create(
 
     return(
         <form 
-        className="w-full justify-content border border-gray-300 rounded-xl px-8 bg-white py-12"
+        className="w-full justify-content border border-gray-300 rounded-xl px-8 bg-white/[0.7] py-12"
         onSubmit={handleSubmitting}
         >
             {
@@ -42,33 +43,80 @@ function Create(
                 </p>
                 </div>
                 <div className="">
-                <div className="mt-5 mr-8">
-
-                    <p className="font-satoshi font-bold text-sm text-black tracking-wide mt-1 pr-8">
-                        Food
+                <div className="mt-5 ">
+                    <div className='flex-between'>
+                    <p className="font-satoshi font-bold text-lg text-black tracking-wide mt-1 pr-8">
+                        Grain
                     </p>
-
                     <input 
                         type='text'
-                        value={post.food}
-                        required
-                        placeholder="Please enter the desired food"
-                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-full outline-none focus:border-gray-900"
-                        onChange={(e) => setPost({...post, food: e.target.value})}
+                        value={post?.grain}
+     
+      
+                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-24 outline-none focus:border-gray-900"
+                        onChange={(e) => setPost({...post, grain: e.target.value})}
                         />
+                    </div>
 
-                    <p className="font-satoshi font-bold text-sm text-black tracking-wide mt-3 pr-8">
-                        Required Amount
+                    <div className='flex-between'>
+                    <p className="font-satoshi font-bold text-lg text-black tracking-wide mt-1 pr-8">
+                        Fruits
                     </p>
-
                     <input 
                         type='text'
-                        value={post.food}
-                        required
-                        placeholder="Please enter the amount in pounds"
-                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-full outline-none focus:border-gray-900"
-                        onChange={(e) => setPost({...post, food: e.target.value})}
+                        value={post?.fruits}
+
+         
+                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-24 outline-none focus:border-gray-900"
+                        onChange={(e) => setPost({...post, fruits: e.target.value})}
                         />
+                    </div>
+
+                    <div className='flex-between'>
+                    <p className="font-satoshi font-bold text-lg text-black tracking-wide mt-1 pr-8">
+                        Vegetable
+                    </p>
+                    <input 
+                        type='text'
+                        value={post?.vegetable}
+      
+    
+                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-24 outline-none focus:border-gray-900"
+                        onChange={(e) => setPost({...post, vegetable: e.target.value})}
+                        />
+                    </div>
+
+                    <div className='flex-between'>
+                    <p className="font-satoshi font-bold text-lg text-black tracking-wide mt-1 pr-8">
+                        Protein
+                    </p>
+                    <input 
+                        type='text'
+                        value={post?.protein}
+     
+
+                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 w-24 outline-none focus:border-gray-900"
+                        onChange={(e) => setPost({...post, protein: e.target.value})}
+                        />
+                    </div>
+
+                    <div className='flex-between'>
+                    <p className="font-satoshi font-bold text-lg text-black tracking-wide mt-1 pr-8">
+                        Dairy
+                    </p>
+                    <input 
+                        type='text'
+                        value={post?.dairy}
+  
+
+                        className="mt-2 text-sm font-medium font-inter border border-gray-300 px-2 rounded py-2 outline-none focus:border-gray-900 w-24"
+                        onChange={(e) => setPost({...post, dairy: e.target.value})}
+                        />
+                    </div>
+
+
+
+
                 </div>
             
 

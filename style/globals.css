@@ -14,9 +14,21 @@ html {
   display: none;
 }
 
+
+.main:before {
+  position: absolute;
+  background: radial-gradient(circle, rgba(255, 251, 249, 0) 0, #ffffffcc 100%);
+  content: "";
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
 body {
   font-family: Inter, Arial, Helvetica, sans-serif;
   height: 100%;
+  background-image: url('/images/background-2.svg');
   overflow-y:auto; /* Allow scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
   
@@ -39,20 +51,11 @@ body::-webkit-scrollbar, body::-webkit-scrollbar-button {
   
 }
 
-.main:before {
-  position: absolute;
-  background: rgb(24, 24, 24);
-  content: "";
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  top: 0;
-}
-
 .main:after {
+  
   content: "";
   z-index: 1;
-  background-image: url('/images/background.svg');
+  background-image: url('/images/background-2.svg');
   background-repeat: repeat; /* Prevent the background from repeating */
   background-position: top; /* Center the background image */
   position: absolute;
@@ -62,6 +65,7 @@ body::-webkit-scrollbar, body::-webkit-scrollbar-button {
   opacity: 0.4;
   
 }
+
 
 .grid-container{
   position: relative;
@@ -246,7 +250,7 @@ body::-webkit-scrollbar, body::-webkit-scrollbar-button {
 }
 
 .black_gradient {
-  @apply bg-gradient-to-r from-stone-200/[0.8] from-5% to-stone-300 to-60% opacity-[0.8] bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-stone-900/[0.8] from-5% to-stone-500 to-60% opacity-[0.8] bg-clip-text text-transparent;
 }
 
 .desc {

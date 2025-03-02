@@ -2,21 +2,27 @@
 
 import Create from "@components/Create"
 import { useSession } from "next-auth/react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@hooks/use-toast"
 import Chatbot from "@components/ChatBox"
-function CreateSession(){
+function CreateSession({session}){
 
-    const {data: session} = useSession()
     const {toast} = useToast()
+
+    const [waiting, setWaiting] = useState(false)
+
+    const [response, setResponse] = useState(null)
 
     const router = useRouter()
 
     const [isChecked, setChecked] = useState(false)
     const [post, setPost] = useState({
         grain: '',
-        required: '',
+        fruits: '',
+        vegetable: '',
+        protein: '',
+        dairy: '',
     })
     const [isSubmitting, setSubmitting] = useState(false)
 
@@ -62,9 +68,31 @@ function CreateSession(){
         }
     }
 
+    const handleYes = () => {
+        const fetchRecipe = async () => {
+            try{
+
+            const response = await fetch('http://localhost:8000/recommend_recipes')
+            const data = await response.json()
+
+            if(data.ok){
+                setResponse(data.recipe)
+                setWaiting(true)
+            }
+            }
+            catch(error){
+                console.log(error)
+            }
+            finally{
+            }
+        }
+        fetchRecipe();
+    }
+
+   
+
     return(
-        <>
-        <Chatbot/>
+        
         <Create
         type='Create'
         post={post}
@@ -72,7 +100,7 @@ function CreateSession(){
         submitting = {isSubmitting}
         handleSubmitting={handleSubmitting}
         />
-        </>
+        
     )
 }
 

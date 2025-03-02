@@ -20,7 +20,6 @@ export default function RootLayout({ children }) {
             
           </div>    
           <main className="app" >
-            <GlowEffect/>
             <Navbar/>
             {children}
             

@@ -17,10 +17,9 @@ export default async function ProfilePage() {
     const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${session.user.id}`);
     const userData = await userResponse.json();
 
-    const postsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${session.user.id}/events`);
-    const postsData = await postsResponse.json();
+
 
     return (
-        <MyProfile initialProfile={userData} initialPosts={postsData} session={plainSession}/>
+        <MyProfile initialProfile={userData} session={plainSession}/>
     );
 }

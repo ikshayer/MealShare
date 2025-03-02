@@ -6,10 +6,9 @@ import { useSession, getSession } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { useToast } from "@hooks/use-toast";
 
-export default function MyProfile({initialPosts, initialProfile, session}){
+export default function MyProfile({initialProfile, session}){
 
     
-    const [post, setPost] = useState(initialPosts)
     const [isSubmitting, setSubmitting] = useState(false)
     
     const {toast} = useToast()
